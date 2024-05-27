@@ -42,18 +42,3 @@ export function calculateExercises(dailyExHours: number[], target: number): ResO
     };
   }
   
-  const args = process.argv.slice(2);
-  if (args.length < 2) {
-      console.log('Please provide at least one target and one exercise hour');
-      process.exit(1);
-  }
-
-  const [target, ...dailyExerciseHours] = args.map(Number);
-
-  if (isNaN(target) || dailyExerciseHours.some(isNaN)) {
-      console.log('All arguments should be numbers');
-      process.exit(1);
-  }
-
-  console.log(calculateExercises(dailyExerciseHours, target));
-  

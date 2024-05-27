@@ -11,4 +11,4 @@ export const calculateBmi = (heightCm: number, weightKg: number): string => {
     } else {
         return "Obese";
     }
-}
+};

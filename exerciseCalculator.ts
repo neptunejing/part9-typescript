@@ -10,7 +10,7 @@ interface ResObject {
 
 // exerciseCalculator.ts
 
-function calculateExercises(dailyExHours: number[], target: number): ResObject {
+export function calculateExercises(dailyExHours: number[], target: number): ResObject {
     const periodLength = dailyExHours.length;
     const trainingDays = dailyExHours.filter(day => day > 0).length;
     const totalHours = dailyExHours.reduce((sum, hours) => sum + hours, 0);
@@ -25,7 +25,7 @@ function calculateExercises(dailyExHours: number[], target: number): ResObject {
       ratingDescription = 'Great';
     } else if (average >= target * 0.5) {
       rating = 2;
-      ratingDescription = 'Not too bad but could be better';
+      ratingDescription = 'not too bad but could be better';
     } else {
       rating = 1;
       ratingDescription = 'Come on';
@@ -42,8 +42,18 @@ function calculateExercises(dailyExHours: number[], target: number): ResObject {
     };
   }
   
-  // Example usage
-  const dailyExerciseHours = [3, 0, 2, 4.5, 0, 3, 1];
-  const target = 2;
+  const args = process.argv.slice(2);
+  if (args.length < 2) {
+      console.log('Please provide at least one target and one exercise hour');
+      process.exit(1);
+  }
+
+  const [target, ...dailyExerciseHours] = args.map(Number);
+
+  if (isNaN(target) || dailyExerciseHours.some(isNaN)) {
+      console.log('All arguments should be numbers');
+      process.exit(1);
+  }
+
   console.log(calculateExercises(dailyExerciseHours, target));
   

@@ -1,19 +1,14 @@
-import { Fragment } from "react/jsx-runtime"
+import { CoursePart } from "../types"
+import Part from "./Part";
 
-interface CoursePart {
-    name: string,
-    exerciseCount: number
-}
-
-interface ContentProps {
-    courseParts: CoursePart[]
-}
-
-const Content = (props: ContentProps) => {
+const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
     return (
-        <Fragment>
-            {props.courseParts.map(coursePart => <p>{coursePart.name} {coursePart.exerciseCount}</p>)}
-        </Fragment>)
+        <div>
+            {courseParts.map((part, index) => (
+                <Part key={index} part={part} />
+            ))}
+        </div>
+    )
 }
 
 export default Content;

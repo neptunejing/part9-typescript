@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { DiaryEntry } from './types';
-import { getAllDiaries, createDiary } from './services/diaries';
 import axios from 'axios';
+import { DiaryEntry, Weather, Visibility } from './types';
+import { getAllDiaries, createDiary } from './services/diaries';
 
 const App: React.FC = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [newDiary, setNewDiary] = useState({
     date: '',
-    weather: '',
-    visibility: '',
+    weather: '' as Weather,
+    visibility: '' as Visibility,
     comment: ''
   });
   const [error, setError] = useState<string | null>(null);
@@ -24,12 +24,17 @@ const App: React.FC = () => {
     setNewDiary({ ...newDiary, [name]: value });
   };
 
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setNewDiary({ ...newDiary, [name]: value as Weather | Visibility });
+  };
+
   const addDiary = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     createDiary(newDiary)
       .then(addedDiary => {
         setDiaries(diaries.concat(addedDiary));
-        setNewDiary({ date: '', weather: '', visibility: '', comment: '' });
+        setNewDiary({ date: '', weather: '' as Weather, visibility: '' as Visibility, comment: '' });
         setError(null);
       })
       .catch(error => {
@@ -52,7 +57,7 @@ const App: React.FC = () => {
           <label>
             Date:
             <input
-              type="text"
+              type="date"
               name="date"
               value={newDiary.date}
               onChange={handleChange}
@@ -60,26 +65,34 @@ const App: React.FC = () => {
           </label>
         </div>
         <div>
-          <label>
-            Visibility:
-            <input
-              type="text"
-              name="visibility"
-              value={newDiary.visibility}
-              onChange={handleChange}
-            />
-          </label>
+          <label>Weather:</label>
+          {['sunny', 'rainy', 'cloudy', 'stormy', 'windy'].map(weather => (
+            <label key={weather}>
+              <input
+                type="radio"
+                name="weather"
+                value={weather}
+                checked={newDiary.weather === weather}
+                onChange={handleRadioChange}
+              />
+              {weather}
+            </label>
+          ))}
         </div>
         <div>
-          <label>
-            Weather:
-            <input
-              type="text"
-              name="weather"
-              value={newDiary.weather}
-              onChange={handleChange}
-            />
-          </label>
+          <label>Visibility:</label>
+          {['great', 'good', 'ok', 'poor'].map(visibility => (
+            <label key={visibility}>
+              <input
+                type="radio"
+                name="visibility"
+                value={visibility}
+                checked={newDiary.visibility === visibility}
+                onChange={handleRadioChange}
+              />
+              {visibility}
+            </label>
+          ))}
         </div>
         <div>
           <label>
@@ -92,7 +105,7 @@ const App: React.FC = () => {
             />
           </label>
         </div>
-        <button type="submit">Add Diary</button>
+        <button type="submit">add</button>
       </form>
 
       <ul>
